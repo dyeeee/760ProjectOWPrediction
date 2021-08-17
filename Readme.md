@@ -3,7 +3,7 @@
 
 
 ### MySQL Connection
-* Host: 8.129.120.114
+* Host: 8.129.120.114:3306
 
 *  User: root
 *  Password: 123
