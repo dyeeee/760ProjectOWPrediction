@@ -19,53 +19,56 @@ cur = conn.cursor()
 #查询match_result_2020表的所需字段数据
 cur.execute("select match_id, match_winner, match_loser from match_result_2020")
 result = cur.fetchall()
-print(result)
 
+#原始数据 转DF格式
 df_result = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"])
-print(df_result.shape)
-print(df_result.head())
+# 原始数据大小
+print("Raw data size：", df_result.shape)
+print("Raw data preview", df_result.head())
+
+# df_result化为邻接矩阵
+df = pd.crosstab(df_result.match_loser, df_result.match_winner)
+print("Outcome between teams", df)
+# idx = df.columns.union(df.index)
+# df = df.reindex(index = idx, columns = idx, fill_value=0)
+
+#这个df就是邻接矩阵了（但是现在的邻接矩阵只是有打过比赛就是1，我们要让失败方向胜利方投票，所以 df[失败方][胜利方] = 1   df[胜利方][失败方] = 0）
+#但是存在同一个队伍打过多次比赛的情况，所以   先实验让df[失败方][胜利方] 可以为1以上的数字
 
 
-# # 创造数据
-# # random > alpha, then here is a edge.
-# def create_data(N, alpha = 0.5):
-#     G = np.zeros((N, N))
-#     for i in range(N):
-#         for j in range(N):
-#             if i == j:
-#                 continue
-#             if random.random() < alpha:
-#                 G[i][j] = 1
-#     return G
 #
-# G = create_data(30)
-# for i in G:
-#     print(i)
-# #生成一个N*N的邻接矩阵，表示网页之间的链接。  等于1表示有边
-#
-# #GtoM:
-# def GtoM(G, N):
-#     M = np.zeros((N, N))     #M也是N*N的零矩阵
-#     for i in range(N):
-#         D_i = sum(G[i])        #一行的和
-#         if D_i == 0:
-#             continue
-#         for j in range(N):
-#             M[j][i] = G[i][j] / D_i # watch out! M_j_i instead of M_i_j
-#     return M
-# M = GtoM(G, 30)
-#
-# #Google Formula
-# def PageRank(M, N, T=300, eps=1e-6, beta=0.8):
-#     R = np.ones(N) / N
-#     teleport = np.ones(N) / N
-#     for time in range(T):
-#         R_new = beta * np.dot(M, R) + (1-beta)*teleport
-#         if np.linalg.norm(R_new - R) < eps:
-#             break
-#         R = R_new.copy()
-#     return R_new
-#
-# values = PageRank(M, 30, T=2000)
-# print(values)
+TeamName = list(df)
+print("Team Name: ", TeamName)
+Number_Team = len(TeamName)
+print("Team Number: ", Number_Team)
+G = df.values
+print(G)
+
+#GtoM:
+def GtoM(G, N):
+    M = np.zeros((N, N))     #M也是N*N的零矩阵
+    for i in range(N):
+        D_i = sum(G[i])        #一行的和
+        if D_i == 0:
+            continue
+        for j in range(N):
+            M[j][i] = G[i][j] / D_i # 注意! 是M_j_i 而不是 M_i_j
+    return M
+
+
+M = GtoM(G, Number_Team)
+
+#Google Formula
+def PageRank(M, N, T=300, eps=1e-6, beta=0.8):
+    R = np.ones(N) / N
+    teleport = np.ones(N) / N
+    for time in range(T):
+        R_new = beta * np.dot(M, R) + (1-beta)*teleport
+        if np.linalg.norm(R_new - R) < eps:
+            break
+        R = R_new.copy()
+    return R_new
+
+values = PageRank(M, Number_Team, T=2000)
+print(values)
 
