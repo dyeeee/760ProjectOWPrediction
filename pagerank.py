@@ -24,11 +24,11 @@ result = cur.fetchall()
 df_result = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"])
 # 原始数据大小
 print("Raw data size：", df_result.shape)
-print("Raw data preview", df_result.head())
+print("Raw data preview \n", df_result.head())
 
 # df_result化为邻接矩阵
 df = pd.crosstab(df_result.match_loser, df_result.match_winner)
-print("Outcome between teams", df)
+print("Outcome between teams: \n", df.head())
 # idx = df.columns.union(df.index)
 # df = df.reindex(index = idx, columns = idx, fill_value=0)
 
@@ -42,7 +42,6 @@ print("Team Name: ", TeamName)
 Number_Team = len(TeamName)
 print("Team Number: ", Number_Team)
 G = df.values
-print(G)
 
 #GtoM:
 def GtoM(G, N):
@@ -69,6 +68,13 @@ def PageRank(M, N, T=300, eps=1e-6, beta=0.8):
         R = R_new.copy()
     return R_new
 
+# 一维数组
 values = PageRank(M, Number_Team, T=2000)
-print(values)
+#字典
+pageRankResult = dict(zip(TeamName,values))
 
+print(pageRankResult)
+
+#字典变df
+pageRankResult_df = pd.DataFrame([pageRankResult]).rename(index={'0': "PageRank"})
+print(pageRankResult_df)
