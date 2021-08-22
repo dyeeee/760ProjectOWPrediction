@@ -8,7 +8,7 @@ class TeamRating(object):
         self._result = df_result
         self._rate = dict()
 
-    def InitTeams(self):
+    def InitPlayers(self):
         for team in self._result['match_winner']:
             if team not in self._rate:
                 self._rate[team] = glicko2.Player()
@@ -17,7 +17,7 @@ class TeamRating(object):
                 self._rate[team] = glicko2.Player()
 
     def CalcualteRate(self):
-        self.InitTeams()
+        self.InitPlayers()
         for _, outcome in self._result.iterrows():
             winner = self._rate[outcome[1]]
             loser = self._rate[outcome[2]]
