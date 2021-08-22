@@ -17,17 +17,17 @@ conn = pymysql.connect(
 cur = conn.cursor()
 
 #查询match_result_2020表的所需字段数据
-cur.execute("select match_id, match_winner, match_loser from match_result_2020")
+cur.execute("select map_winner, map_loser from match_map_result_2020 where map_winner != 'draw'")
 result = cur.fetchall()
 
 #原始数据 转DF格式
-df_result = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"])
+df_result = pd.DataFrame(list(result),columns = ["map_winner", "map_loser"])
 # 原始数据大小
 print("Raw data size：", df_result.shape)
 print("Raw data preview \n", df_result.head())
 
 # df_result化为邻接矩阵
-df = pd.crosstab(df_result.match_loser, df_result.match_winner)
+df = pd.crosstab(df_result.map_loser, df_result.map_winner)
 print("Outcome between teams: \n", df.head())
 # idx = df.columns.union(df.index)
 # df = df.reindex(index = idx, columns = idx, fill_value=0)
@@ -70,6 +70,7 @@ def PageRank(M, N, T=300, eps=1e-6, beta=0.8):
 
 # 一维数组
 values = PageRank(M, Number_Team, T=2000)
+print(values)
 #字典
 pageRankResult = dict(zip(TeamName,values))
 pageRankResult = sorted(pageRankResult .items(), key=lambda item:item[1], reverse=True)
