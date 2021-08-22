@@ -1,7 +1,16 @@
+from plotly.graph_objs import Figure
+
 import glicko2
 import pymysql
 import pandas as pd
 import numpy as np
+import cufflinks
+import chart_studio
+import chart_studio.plotly as py
+import plotly.graph_objects as go
+cufflinks.go_offline(connected=True)
+chart_studio.tools.set_credentials_file(username='KexiZhang', api_key='FlQ8axWch9faAuPaNzvj')
+
 
 class PlayerRating(object):
 
@@ -92,9 +101,9 @@ if __name__ == '__main__':
     )
     cur = conn.cursor()
     cur.execute("select match_id, match_winner, match_loser from match_result_2020")
-    result = cur.fetchall()
+    df_player_rating_role = cur.fetchall()
 
-    df_result = pd.DataFrame(list(result), columns=["match_id", "match_winner", "match_loser"])
+    df_result = pd.DataFrame(list(df_player_rating_role), columns=["match_id", "match_winner", "match_loser"])
 
     cur.execute("select esports_match_id, player_name, team_name, stat_amount, time_played from all_heroes_damage_2020_1")
     hero = cur.fetchall()
@@ -107,10 +116,41 @@ if __name__ == '__main__':
     a = list()
     for player in sorted (TR._playerRate):
         a.append((player, TR._playerRate[player].rating))
-        #print(str(team) + "\t" + str(TR._rate[team].rating))
+        # print(str(team) + "\t" + str(TR._rate[team].rating))
     a.sort(key = takeSecond, reverse=True)
     i = 1
-    for team in a:
-        print(str(i)+ "\t" + str(team[0]) + "\t" + str(team[1]))
-        i+=1
+    # for player in a:
+    #     print(str(i) + "\t" + str(player[0]) + "\t" + str(player[1]))
+    #     # 0 is player name, 1 is player rating
+    #     i+=1
+
+    # combine player_rating and their role
+    df_player_rating = pd.DataFrame(a, columns=['player_name', 'player_rating'])
+    # print(df_player_rating)
+    cur.execute("select distinct player_name,role from player_role_team")
+    role = cur.fetchall()
+    df_role = pd.DataFrame(list(role), columns=["player_name", "role"])
+    df_player_rating_role = pd.merge(df_player_rating, df_role)
+
+    role_set = ['damage', 'tank', 'support']
+    color_set = ['rgb(228,26,28)', 'rgb(55,126,184)', 'rgb(77, 175, 74)']
+    symbol_set = ['triangle-up', 'circle', 'cross']
+
+    trace0 = []
+    for i in range(0, len(role_set)):
+        trace0.append(go.Scatter(x = [j for j in range(1, df_player_rating_role.shape[0] + 1)],
+                                 y = list(df_player_rating_role[df_player_rating_role.role == role_set[i]].player_rating),
+                                 mode = 'markers',
+                                 text = list(df_player_rating_role[df_player_rating_role.role == role_set[i]].player_name),
+                                 name = role_set[i],
+                                 marker= dict(color=color_set[i], size=10, symbol = symbol_set[i])))
+    layout = go.Layout(
+        title = dict(text = "Player rating by Glicko",  x = 0.5),
+
+        xaxis = dict(title = "Ranking"),
+        yaxis = dict(title = "Player rating"))
+    fig = go.Figure(data=trace0, layout=layout)
+    py.plot(fig, filename = 'player_rating_role')
+    #py.plot(trace0, filename='player_rating_role')
+
 
