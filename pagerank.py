@@ -119,5 +119,6 @@ layout = go.Layout(
     title = dict(text = "Team rating 2020 by Pagerank",  x = 0.5),
     xaxis = dict(title = "Rating"),
     yaxis = dict(title = "Team name"))
+
 fig = go.Figure(data=[trace0], layout=layout)
 py.plot(fig, filename = 'team_pagerank')
