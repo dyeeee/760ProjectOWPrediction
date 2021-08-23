@@ -21,10 +21,10 @@ cur.execute("select match_id, match_winner, match_loser from match_result_2020")
 result = cur.fetchall()
 
 #原始数据 转DF格式
-df_result = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"])
+df_result = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"]).iloc[0:264,:]
 # 原始数据大小
 print("Raw data size：", df_result.shape)
-print("Raw data preview \n", df_result.head())
+print("Raw data preview \n", df_result.tail())
 
 # df_result化为邻接矩阵
 df = pd.crosstab(df_result.match_loser, df_result.match_winner)

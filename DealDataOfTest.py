@@ -22,7 +22,7 @@ result = cur.fetchall()
 df_result = pd.DataFrame(list(result))
 df_result = df_result[df_result.iloc[:,1]>1000]
 print(df_result)
-df_result.iloc[:, [3,4,5,6,8,9,10,11]] = df_result.iloc[:, [3,4,5,6,8,9,10,11]] / df_result.iloc[:, 1] #*60
+df_result.iloc[:, [3,4,5,6,8,9,10,11]] = df_result.iloc[:, [3,4,5,6,8,9,10,11]].div(df_result.iloc[:, 1], axis=0 )*60
 
 # 原始数据大小
 print("Raw data size：", df_result.shape)
@@ -36,14 +36,18 @@ p = df_result
 for i in range(df_result.shape[0]):
     q = df_result[(df_result.iloc[:,2] == df_result.iloc[i, 2]) & (df_result.iloc[:,0]<df_result.iloc[i, 0])]
     if q.shape[0] == 0:
-        p.iloc[i, [3, 4, 5, 6]].update([0,0,0,0])
+        p.iloc[i, [3, 4, 5, 6]] = [0,0,0,0]
+        print(p.iloc[i,2],"之前没有比赛")
     elif q.shape[0] < 5:
         # 小于5场，设置为他们所有的和的均值
         q = q.sort_values(by=0, axis=0,  ascending=False)
-        p.iloc[i, [3, 4, 5, 6]].update(q.iloc[0:q.shape[0], [3, 4, 5, 6]].mean())
+        print(q,i, q.shape[0])
+        p.iloc[i, [3, 4, 5,6]] = q.iloc[0:q.shape[0], [3, 4, 5, 6]].mean()`
+        print(q.iloc[0:q.shape[0], [3, 4, 5, 6]].mean().T)
     else:
         # 选取前五场
         q = q.sort_values(by=0, axis=0,  ascending=False)
+
         p.iloc[i, [3, 4, 5, 6]].update(q.iloc[0:5,[3, 4, 5, 6]].mean())
 
 pd.set_option('display.max_columns', None)
