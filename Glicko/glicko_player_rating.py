@@ -124,33 +124,31 @@ if __name__ == '__main__':
     #     # 0 is player name, 1 is player rating
     #     i+=1
 
+    # 画图代码
     # combine player_rating and their role
     df_player_rating = pd.DataFrame(a, columns=['player_name', 'player_rating'])
-    # print(df_player_rating)
     cur.execute("select distinct player_name,role from player_role_team")
     role = cur.fetchall()
     df_role = pd.DataFrame(list(role), columns=["player_name", "role"])
     df_player_rating_role = pd.merge(df_player_rating, df_role)
 
-    role_set = ['damage', 'tank', 'support']
-    color_set = ['rgb(228,26,28)', 'rgb(55,126,184)', 'rgb(77, 175, 74)']
-    symbol_set = ['triangle-up', 'circle', 'cross']
+    role_list = ['damage', 'tank', 'support']
+    color_list = ['rgb(228,26,28)', 'rgb(55,126,184)', 'rgb(77, 175, 74)']
+    symbol_list = ['triangle-up', 'circle', 'cross']
 
     trace0 = []
-    for i in range(0, len(role_set)):
+    for i in range(0, len(role_list)):
         trace0.append(go.Scatter(x = [j for j in range(1, df_player_rating_role.shape[0] + 1)],
-                                 y = list(df_player_rating_role[df_player_rating_role.role == role_set[i]].player_rating),
+                                 y = list(df_player_rating_role[df_player_rating_role.role == role_list[i]].player_rating),
                                  mode = 'markers',
-                                 text = list(df_player_rating_role[df_player_rating_role.role == role_set[i]].player_name),
-                                 name = role_set[i],
-                                 marker= dict(color=color_set[i], size=10, symbol = symbol_set[i])))
+                                 text = list(df_player_rating_role[df_player_rating_role.role == role_list[i]].player_name),
+                                 name = role_list[i],
+                                 marker= dict(color=color_list[i], size=10, symbol = symbol_list[i])))
     layout = go.Layout(
-        title = dict(text = "Player rating by Glicko",  x = 0.5),
-
+        title = dict(text = "Player rating demo 2020 by Glicko",  x = 0.5),
         xaxis = dict(title = "Ranking"),
         yaxis = dict(title = "Player rating"))
     fig = go.Figure(data=trace0, layout=layout)
     py.plot(fig, filename = 'player_rating_role')
-    #py.plot(trace0, filename='player_rating_role')
 
 

@@ -2,6 +2,12 @@ import numpy as np
 import random
 import pymysql
 import pandas as pd
+import cufflinks
+import chart_studio
+import chart_studio.plotly as py
+import plotly.graph_objects as go
+cufflinks.go_offline(connected=True)
+chart_studio.tools.set_credentials_file(username='KexiZhang', api_key='FlQ8axWch9faAuPaNzvj')
 
 # 将阿杜整理的表 转化为邻接矩阵
 # 链接数据库
@@ -70,8 +76,48 @@ def PageRank(M, N, T=300, eps=1e-6, beta=0.8):
 
 # 一维数组
 values = PageRank(M, Number_Team, T=2000)
-#字典
-pageRankResult = dict(zip(TeamName,values))
-pageRankResult = sorted(pageRankResult .items(), key=lambda item:item[1], reverse=True)
+# pageRankResult = dict(zip(TeamName, values))
+# pageRankResult = dict(sorted(pageRankResult.items(), key=lambda item:item[1], reverse=True))
+# print(pageRankResult)
 
-print(pageRankResult)
+# 战队颜色
+team_color_list = ['rgb(145,15,27)',
+                   'rgb(23,75,151)',
+                   'rgb(255,160,0)',
+                   'rgb(0,114,206)',
+                   'rgb(207,70,145)',
+                   'rgb(103,162,178)',
+                   'rgb(251,114,153)',
+                   'rgb(151,215,0)',
+                   'rgb(89,203,232)',
+                   'rgb(60,16,83)',
+                   'rgb(255,209,0)',
+                   'rgb(15,87,234)',
+                   'rgb(141,4,45)',
+                   'rgb(249,157,42)',
+                   'rgb(165,172,175)',
+                   'rgb(172,138,0)',
+                   'rgb(210,38,48)',
+                   'rgb(0,0,0)',
+                   'rgb(47,178,40)',
+                   'rgb(153,0,52)']
+
+# 字典
+pageRankResult_df = pd.DataFrame({"team_name":TeamName, "pagerank":values, "team_color":team_color_list})
+print(pageRankResult_df)
+pageRankResult_df = pageRankResult_df.sort_values(by="pagerank", ascending=True)
+
+# 画图代码
+trace0 = go.Bar(
+    x = pageRankResult_df.pagerank,
+    y = pageRankResult_df.team_name,
+    orientation = 'h',
+    text= pageRankResult_df.pagerank,
+    marker=dict(color = pageRankResult_df.team_color)
+)
+layout = go.Layout(
+    title = dict(text = "Team rating 2020 by Pagerank",  x = 0.5),
+    xaxis = dict(title = "Rating"),
+    yaxis = dict(title = "Team name"))
+fig = go.Figure(data=[trace0], layout=layout)
+py.plot(fig, filename = 'team_pagerank')
