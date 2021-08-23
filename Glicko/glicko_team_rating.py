@@ -26,6 +26,9 @@ class TeamRating(object):
             loser.update_player([winner.rating], [winner.rd], [0])
             winner.update_player([loser_rating], [loser_rd], [1])
 
+def takeSecond(elem):
+    return elem[1]
+
 if __name__ == '__main__':
     conn = pymysql.connect(
         host="8.129.120.114",
@@ -42,7 +45,13 @@ if __name__ == '__main__':
 
     TR = TeamRating(df_result)
     TR.CalcualteRate()
+    a = list()
     for team in sorted (TR._rate):
-        print(str(team) + "\t" + str(TR._rate[team].rating))
-    print(sorted(TR._rate.items(), key=lambda kv: (kv[1], kv[0])))
+        a.append((team, TR._rate[team].rating))
+        #print(str(team) + "\t" + str(TR._rate[team].rating))
+    a.sort(key = takeSecond, reverse=True)
+    i = 1
+    for team in a:
+        print(str(i)+ "\t" + str(team[0]) + "\t" + str(team[1]))
+        i+=1
 
