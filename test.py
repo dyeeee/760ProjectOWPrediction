@@ -34,7 +34,22 @@ result = cur.fetchall()
 # 原始数据 转DF格式
 df_result = pd.DataFrame(list(result))
 
-cur
+# 找列名
+cur1 = conn.cursor()
+cur1.execute("SELECT COLUMN_NAME  FROM information_schema.columns WHERE table_name='all_heroes_stat_all_2020_FeatureSelection'")
+result1 = cur1.fetchall()
 
+columnName = list(result1)
+i = 0
+for x in columnName:
+    columnName[i] = x[0]
+    i = i+1
+
+# 将列名给df
+df_result.columns = columnName
 
 print(df_result.head())
+
+print(df_result.loc[:, ['esports_match_id', 'map_name', 'team_name', 'Eliminations']])
+
+
