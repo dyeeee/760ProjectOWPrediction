@@ -52,4 +52,12 @@ print(df_result.head())
 
 print(df_result.loc[:, ['esports_match_id', 'map_name', 'team_name', 'Eliminations']])
 
+df_x = df_result.drop(columns=['esports_match_id', 'map_name', 'team_name', 'Eliminations'])
+df_y = df_result.loc[:, ['Eliminations']]
+
+
+# 方差选择法，返回值为特征选择后的数据
+# 参数threshold为方差的阈值
+q = VarianceThreshold(threshold=3).fit_transform(df_x)
+print(q)
 

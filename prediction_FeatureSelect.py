@@ -24,6 +24,7 @@ conn = pymysql.connect(
     db="OWL_Data"
 )
 
+
 # 创建游标
 cur = conn.cursor()
 
@@ -34,17 +35,36 @@ result = cur.fetchall()
 # 原始数据 转DF格式
 df_result = pd.DataFrame(list(result))
 
+# 找列名
+cur1 = conn.cursor()
+cur1.execute("SELECT COLUMN_NAME  FROM information_schema.columns WHERE table_name='all_heroes_stat_all_2020_FeatureSelection'")
+result1 = cur1.fetchall()
+
+columnName = list(result1)
+i = 0
+for x in columnName:
+    columnName[i] = x[0]
+    i = i+1
+
+# 将列名给df
+df_result.columns = columnName
+
 print(df_result.head())
 
+print(df_result.loc[:, ['esports_match_id', 'map_name', 'team_name', 'Eliminations']])
+
+# df_result 就是df
+
 # 归一化，返回值为归一化后的数据
-Normalizer().fit_transform(data)
+print(Normalizer().fit_transform(df_result))
 
 # 特征选择-方差选择（如果一个特征不发散，例如方差接近于0，也就是说样本在这个特征上基本上没有差异，这个特征对于样本的区分
 # 并没有什么用。）
 
 # 方差选择法，返回值为特征选择后的数据
 # 参数threshold为方差的阈值
-VarianceThreshold(threshold=3).fit_transform(data)
+q = VarianceThreshold(threshold=3).fit_transform(df_result)
+print(q)
 
 # 选择K个最好的特征，返回选择特征后的数据
 # 第一个参数为计算评估特征是否好的函数，该函数输入特征矩阵和目标向量，输出二元组（评分，P值）的数组，数组第i项为第i个特征的评分和P值。在此定义为计算相关系数
