@@ -25,7 +25,8 @@ from (
 
 
 # 每一列横向展开
-Create table all_heroes_stat_all_2020_tmp2
+drop table all_heroes_stat_all_2020_tmp2;
+Create table all_heroes_stat_all_2020_Player
 SELECT esports_match_id, map_name, team_name, player_name,
         SUM(IF(stat_name = 'All Damage Done', stat_amount,0)) as "All Damage Done",
         SUM(IF(stat_name = 'Assists', stat_amount,0)) as "Assists",
@@ -64,11 +65,12 @@ SELECT esports_match_id, map_name, team_name, player_name,
         SUM(IF(stat_name = 'Teleporter Pads Destroyed', stat_amount,0)) as "Teleporter Pads Destroyed",
         SUM(IF(stat_name = 'Recon Assists', stat_amount,0)) as "Recon Assists"
 FROM all_heroes_stat_all_2020_tmp1
+where team_name in (select distinct match_winner from match_result_2020)
 GROUP BY esports_match_id, map_name, team_name, player_name;
 
 
-# 按比赛ID和和地图和队伍求和
-Create table all_heroes_stat_all_2020_tmp3
+drop table all_heroes_stat_all_2020_FeatureSelection;
+Create table all_heroes_stat_all_2020_FeatureSelection
 Select esports_match_id,map_name,team_name,
     SUM(`All Damage Done`) as 'All Damage Done',
     SUM(`Assists`) as 'Assists',
@@ -107,4 +109,5 @@ Select esports_match_id,map_name,team_name,
     SUM(`Teleporter Pads Destroyed`) as 'Teleporter Pads Destroyed',
     SUM(`Recon Assists`) as 'Recon Assists'
 from all_heroes_stat_all_2020_tmp2
+where team_name in (select distinct match_winner from match_result_2020)
 group by esports_match_id,map_name,team_name;
