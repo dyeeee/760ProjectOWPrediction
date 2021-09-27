@@ -80,7 +80,8 @@ def mic(x, y):
 
 
 # 选择K个最好的特征，返回特征选择后的数据
-SelectKBest(lambda X, Y: array(list(map(lambda x: pearsonr(x, Y)[0], X.T))).T, k=2).fit_transform(iris.data, iris.target)
+#选择K个最好的特征，返回特征选择后的数据
+SelectKBest(lambda X, Y: array(map(lambda x:mic(x, Y), X.T)).T, k=2).fit_transform(iris.data, iris.target)
 
 # 递归特征消除法，返回特征选择后的数据：
 # 参数estimator为基模型
