@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import cufflinks
 import chart_studio
+from sqlalchemy import types, create_engine
 import chart_studio.plotly as py
 import plotly.graph_objects as go
 cufflinks.go_offline(connected=True)
@@ -23,7 +24,7 @@ class PlayerRating(object):
         self._zscore = dict()
 
         self.playtime = dict()
-        self.blacklist = ["ta1yo", "ryujehong", "Geguri", "sayaplayer", "Munchkin", "Ado", "mikeyy", "ColdesT", "Bischu", "ChipSa"]
+        self.blacklist = ["ta1yo", "ryujehong", "Geguri", "sayaplayer", "Munchkin", "Ado", "mikeyy", "ColdesT", "Bischu", "ChipSa", "LeeJaegon"]
 
         self.rateRealtime = dict()
 
@@ -99,7 +100,7 @@ class PlayerRating(object):
     def DpsNormalization(self, inf):
         assist = (inf[1]/inf[8] - self._zscore["Assist"][0]) / self._zscore["Assist"][1]
         ta = (inf[2]/inf[8] - self._zscore["TimeAlive"][0]) / self._zscore["TimeAlive"][1]
-        death = inf[3]/inf[8] - self._zscore["Deaths"][0] / self._zscore["Deaths"][1]
+        death = (inf[3]/inf[8] - self._zscore["Deaths"][0]) / self._zscore["Deaths"][1]
         fb = (inf[4]/inf[8] - self._zscore["FinalBlows"][0]) / self._zscore["FinalBlows"][1]
         ek = (inf[5]/inf[8] - self._zscore["Environment"][0]) / self._zscore["Environment"][1]
         mp = (inf[6]/inf[8] - self._zscore["Melee"][0]) / self._zscore["Melee"][1]
@@ -116,6 +117,7 @@ class PlayerRating(object):
         self.InitmatchDict()
         self.InitNorm()
 
+        performance = []
 
         for _, outcome in self._result.iterrows():
             matchId = outcome[0]
@@ -126,19 +128,29 @@ class PlayerRating(object):
             winner_rating = winner.rating
             winner_rd = winner.rd
 
+
             for player, inf in self._matchDict[matchId].items():
                 playerRate = self._playerRate[player]
                 normDps =  self.DpsNormalization(inf)
-                if(winner == inf[0]):
+
+                normDps = (normDps + 1.5) / 10
+                performance.append(normDps)
+
+                if(outcome[1] == inf[0]):
                     playerRate.update_player([loser_rating], [loser_rd], [1 + normDps])
                 else:
                     playerRate.update_player([winner_rating], [winner_rd], [normDps])
+
+
+
+
 
             loser.update_player([winner_rating], [winner_rd], [0])
             winner.update_player([loser_rating], [loser_rd], [1])
 
             for player, rate in self._playerRate.items():
                 self.rateRealtime[player][matchId] = rate.rating
+        print(max(performance), min(performance))
 
 
 
@@ -187,34 +199,37 @@ if __name__ == '__main__':
         i+=1
 
     data = pd.DataFrame(TR.rateRealtime)
-    print()
-
-    # 画图代码
-    # combine player_rating and their role
-
-    # df_player_rating = pd.DataFrame(a, columns=['player_name', 'player_rating'])
-    # cur.execute("select distinct player_name,role from player_role_team where player_name in (select player_name from player_total_time_played_2020)")
-    # role = cur.fetchall()
-    # df_role = pd.DataFrame(list(role), columns=["player_name", "role"])
-    # df_player_rating_role = pd.merge(df_player_rating, df_role)
+    data.index.name = 'match_id'
+    # connect = create_engine("mysql+pymysql://root:123@8.129.120.114:3306/OWL_Data?charset=utf8")
     #
-    # role_list = ['damage', 'tank', 'support']
-    # color_list = ['rgb(228,26,28)', 'rgb(55,126,184)', 'rgb(77, 175, 74)']
-    # symbol_list = ['triangle-up', 'circle', 'cross']
-    #
-    # trace0 = []
-    # for i in range(0, len(role_list)):
-    #     trace0.append(go.Scatter(x = [j for j in range(1, df_player_rating_role.shape[0] + 1)],
-    #                              y = list(df_player_rating_role[df_player_rating_role.role == role_list[i]].player_rating),
-    #                              mode = 'markers',
-    #                              text = list(df_player_rating_role[df_player_rating_role.role == role_list[i]].player_name),
-    #                              name = role_list[i],
-    #                              marker= dict(color=color_list[i], size=10, symbol = symbol_list[i])))
-    # layout = go.Layout(
-    #     title = dict(text = "Player rating demo 2020 by Glicko",  x = 0.5),
-    #     xaxis = dict(title = "Ranking"),
-    #     yaxis = dict(title = "Player rating"))
-    # fig = go.Figure(data=trace0, layout=layout)
-    # py.plot(fig, filename = 'player_rating_role')
+    # data.to_sql('player_rating_in_realTime', connect, if_exists = 'replace', dtype={'match_id', types.Integer})
+
+    #画图代码
+    #combine player_rating and their role
+
+    df_player_rating = pd.DataFrame(a, columns=['player_name', 'player_rating'])
+    cur.execute("select distinct player_name,role from player_role_team where player_name in (select player_name from player_total_time_played_2020)")
+    role = cur.fetchall()
+    df_role = pd.DataFrame(list(role), columns=["player_name", "role"])
+    df_player_rating_role = pd.merge(df_player_rating, df_role)
+
+    role_list = ['damage', 'tank', 'support']
+    color_list = ['rgb(228,26,28)', 'rgb(55,126,184)', 'rgb(77, 175, 74)']
+    symbol_list = ['triangle-up', 'circle', 'cross']
+
+    trace0 = []
+    for i in range(0, len(role_list)):
+        trace0.append(go.Scatter(x = [j for j in range(1, df_player_rating_role.shape[0] + 1)],
+                                 y = list(df_player_rating_role[df_player_rating_role.role == role_list[i]].player_rating),
+                                 mode = 'markers',
+                                 text = list(df_player_rating_role[df_player_rating_role.role == role_list[i]].player_name),
+                                 name = role_list[i],
+                                 marker= dict(color=color_list[i], size=10, symbol = symbol_list[i])))
+    layout = go.Layout(
+        title = dict(text = "Player rating demo 2020 by Glicko",  x = 0.5),
+        xaxis = dict(title = "Ranking"),
+        yaxis = dict(title = "Player rating"))
+    fig = go.Figure(data=trace0, layout=layout)
+    py.plot(fig, filename = 'player_rating_role')
 
 
