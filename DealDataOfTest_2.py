@@ -53,7 +53,7 @@ pd.set_option('display.max_columns', None)
 # 显示所有行
 pd.set_option('display.max_rows', None)
 # print(p.iloc[:, [0, 2, 3, 4, 5, 6]])
-p.to_csv("./Subdata/test.csv")
+# p.to_csv("./Subdata/test.csv")
 
 # 一句话
 # x = df_result[(df_result.iloc[:,2] == "Vancouver Titans") & (df_result.iloc[:,0].astype(int) < 34811)]
