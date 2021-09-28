@@ -42,7 +42,7 @@ for i in range(df_result.shape[0]):
         # 小于5场，设置为他们所有的和的均值
         q = q.sort_values(by=0, axis=0,  ascending=False)
         print(q,i, q.shape[0])
-        p.iloc[i, [3, 4, 5,6]] = q.iloc[0:q.shape[0], [3, 4, 5, 6]].mean()`
+        p.iloc[i, [3, 4, 5,6]] = q.iloc[0:q.shape[0], [3, 4, 5, 6]].mean()
         print(q.iloc[0:q.shape[0], [3, 4, 5, 6]].mean().T)
     else:
         # 选取前五场

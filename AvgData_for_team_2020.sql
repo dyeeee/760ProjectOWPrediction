@@ -41,6 +41,8 @@ SELECT esports_match_id, map_name, team_name, player_name,
 FROM all_heroes_stat_1_2020_tmp1
 GROUP BY esports_match_id, map_name, team_name, player_name;
 
+
+
 # 按比赛ID和队伍求和
 Create table team_match_stat_2020_tmp1
 Select esports_match_id,team_name,
