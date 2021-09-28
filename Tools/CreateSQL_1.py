@@ -40,8 +40,17 @@ all_features = [
 #     result = '''SUM(IF(stat_name = '{0}', stat_amount,0)) as "{0}",'''.format(str)
 #     print(result)
 
+# for str in all_features:
+#     result = '''SUM(`{0}`) as '{0}','''.format(str)
+#     print(result)
+
+
+# for str in all_features:
+#     result = '`{0}` as t2_{1},'.format(str, str.replace(" ", "_"))
+#     result2 = 't1_{0},'.format(str.replace(" ", "_"))
+#     print(result2)
+
 for str in all_features:
-    result = '''SUM(`{0}`) as '{0}','''.format(str)
-    print(result)
-
-
+    result = 't1_{0}/Time_Played*600 as avg10_t1_{0},'.format(str.replace(" ", "_"))
+    result2 = 't2_{0}/Time_Played*600 as avg10_t2_{0},'.format(str.replace(" ", "_"))
+    print(result,result2)
