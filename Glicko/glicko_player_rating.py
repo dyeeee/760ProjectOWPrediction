@@ -226,10 +226,12 @@ if __name__ == '__main__':
                                  name = role_list[i],
                                  marker= dict(color=color_list[i], size=10, symbol = symbol_list[i])))
     layout = go.Layout(
-        title = dict(text = "Player rating demo 2020 by Glicko",  x = 0.5),
+        title = dict(text = "Player rating 2020 by Glicko",  x = 0.5),
         xaxis = dict(title = "Ranking"),
         yaxis = dict(title = "Player rating"))
     fig = go.Figure(data=trace0, layout=layout)
     py.plot(fig, filename = 'player_rating_role')
+
+    cur.close()
 
 

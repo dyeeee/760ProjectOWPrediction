@@ -45,11 +45,13 @@ s_importance = pd.Series(list(clf.feature_importances_), index=col_imp)
 s_importance.sort_values(ascending=False, inplace=True)
 print(s_importance)
 
-# df_importance = pd.DataFrame(list(imp), columns=col)
-# print(df_importance)
-# model = SelectFromModel(clf, prefit=True)
-# X_new = model.transform(X)
-# print(X_new.shape)
-# l = [1,2,3]
-# s=",".join(map(str,l))
-# print(s)
+model = SelectFromModel(clf, prefit=True, max_features=15)
+X_new = model.transform(X)
+
+clf_new = ExtraTreesClassifier()
+clf_new = clf_new.fit(X_new, y)
+# y_predict = clf_new.predict(X_new)
+result = clf_new.score(X_new, y)
+print(result)
+
+cur.close()
