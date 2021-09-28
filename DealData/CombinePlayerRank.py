@@ -39,7 +39,7 @@ for index, row in df_teamname.iterrows():
 #     player_name_list.append(row['player_name'])
 
 
-cur.execute("SELECT * from playerrank_match_2020 order by match_id")
+cur.execute("SELECT * from playerrank_match_2020_v2 order by match_id")
 des = cur.description
 col = []
 for i in range(len(des)):

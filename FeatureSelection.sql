@@ -375,3 +375,19 @@ t1_Turrets_Destroyed/Time_Played*600 as avg10_t1_Turrets_Destroyed, t2_Turrets_D
 t1_Teleporter_Pads_Destroyed/Time_Played*600 as avg10_t1_Teleporter_Pads_Destroyed, t2_Teleporter_Pads_Destroyed/Time_Played*600 as avg10_t2_Teleporter_Pads_Destroyed,
 t1_Recon_Assists/Time_Played*600 as avg10_t1_Recon_Assists, t2_Recon_Assists/Time_Played*600 as avg10_t2_Recon_Assists
        FROM all_heroes_stat_all_2020_tmp4;
+
+
+# 特征筛选完 + 三个评分合并
+create table team_match_stat_all_2020_withRank_v2
+select a.*,
+       if(a.t1_name = p.match_winner, p.winner_pagerank_before, p.loser_pagerank_before) as t1_pagerank_before,
+       if(a.t2_name = p.match_winner, p.winner_pagerank_before, p.loser_pagerank_before) as t2_pagerank_before,
+       if(a.t1_name = o.match_winner, o.winner_win_before, o.loser_win_before) as t1_officialwin_before,
+       if(a.t2_name = o.match_winner, o.winner_win_before, o.loser_win_before) as t2_officialwin_before,
+       if(a.t1_name = m.match_winner, m.win_playerrank_before, m.lose_playerrank_before) as t1_playerrank_before,
+       if(a.t2_name = m.match_winner, m.win_playerrank_before, m.lose_playerrank_before) as t1_playerrank_before
+from team_match_stat_all_2020 as a
+left join pagerank_match_2020_2 p on a.match_id = p.match_id
+left join officialrank_match_2020_2 o on a.match_id = o.match_id
+left join playerrank_match_2020_2_v2 m on a.match_id = m.match_id
+;
