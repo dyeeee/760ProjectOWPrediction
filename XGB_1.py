@@ -1,7 +1,7 @@
 import xgboost as xgb
 from xgboost import plot_importance
 from matplotlib import pyplot as plt
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score
 import pandas as pd
 import numpy as np
@@ -22,11 +22,15 @@ test_df = pd.read_table("./P3_Data/OWL_Data_TESTSET_V3.csv", sep=",")
 # test_Data = test_df.iloc[:, 5:]
 # test_response = test_df["3"]
 new_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14]
+off_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14, 40]
+pag_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14, 41]
+pr_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14, 42]
+add_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14, 41, 42]
 
-data = df.iloc[:, new_index]
+data = df.iloc[:, off_index]
 response = df["t1_win"]
 
-test_Data = test_df.iloc[:, new_index]
+test_Data = test_df.iloc[:, off_index]
 test_response = test_df["t1_win"]
 
 X_train, y_train = data, response
@@ -48,10 +52,7 @@ print("\tXgboost：", xgb.score(X_test, y_test))
 print("\t预测结果评价报表：\n", metrics.classification_report(y_test, y_pred))
 print("\t混淆矩阵：\n", metrics.confusion_matrix(y_test, y_pred))
 
-
-
 from sklearn.model_selection import GridSearchCV
-
 
 # from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 #
@@ -69,7 +70,6 @@ from sklearn.model_selection import GridSearchCV
 #
 # param_lst2 = {
 #     "max_depth": [3, 5, 7, 10],
-#     # "min_child_weight": [1, 3, 6],
 #     "n_estimators": [100, 200, 300],
 #     "learning_rate": [0.001, 0.05, 0.1]
 # }
@@ -102,3 +102,61 @@ from sklearn.model_selection import GridSearchCV
 # print("\t预测结果评价报表：\n", metrics.classification_report(y_test, y_pred))
 # print("\t混淆矩阵：\n", metrics.confusion_matrix(y_test, y_pred))
 
+
+score_lt = []
+
+for i in range(0, 200, 10):
+    rfc = XGBClassifier(n_estimators=i + 1
+                        , random_state=90)
+    score = cross_val_score(rfc, X_train, y_train, cv=10).mean()
+    score_lt.append(score)
+score_max = max(score_lt)
+print('最大得分：{}'.format(score_max),
+      '子树数量为：{}'.format(score_lt.index(score_max) * 10 + 1))
+
+# 绘制学习曲线
+x = np.arange(1, 201, 10)
+plt.subplot(111)
+plt.plot(x, score_lt, 'r-')
+plt.xlabel('n_estimators')
+plt.ylabel('accuracy')
+plt.show()
+
+score_lt = []
+for i in range(40, 60):
+    rfc = XGBClassifier(n_estimators=i + 1
+                        , random_state=90)
+    score = cross_val_score(rfc, X_train, y_train, cv=10).mean()
+    score_lt.append(score)
+score_max = max(score_lt)
+print('最大得分：{}'.format(score_max),
+      '子树数量为：{}'.format(score_lt.index(score_max) + 1))
+
+# 绘制学习曲线
+x = np.arange(11, 31)
+plt.subplot(111)
+plt.plot(x, score_lt, 'r-')
+plt.xlabel('n_estimators')
+plt.ylabel('accuracy')
+plt.show()
+
+xgb = XGBClassifier(random_state=999, n_estimators=10)
+print(cross_val_score(xgb, X_test, y_test, cv=10).mean())
+
+score_lt = []
+for i in range(0, 20):
+    rfc = XGBClassifier(n_estimators=10
+                        , random_state=90)
+    score = cross_val_score(rfc, X_train, y_train, cv=10).mean()
+    score_lt.append(score)
+score_max = max(score_lt)
+print('最大得分：{}'.format(score_max),
+      '子树数量为：{}'.format(score_lt.index(score_max) + 1))
+
+# 绘制学习曲线
+x = np.arange(1, 21)
+plt.subplot(111)
+plt.plot(x, score_lt, 'r-')
+plt.xlabel('n_estimators')
+plt.ylabel('accuracy')
+plt.show()

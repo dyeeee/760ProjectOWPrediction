@@ -52,14 +52,17 @@ X_test, y_test = test_Data, test_response
 # # 输出搜索结果
 # print(grid_search.best_estimator_)
 
-best_rf = RandomForestClassifier(random_state=999, max_depth=3, n_estimators=30)
-best_rf = best_rf.fit(X_train, y_train)
-print('Train score:{:.3f}'.format(best_rf.score(X_train, y_train)))
-print('Test score:{:.3f}'.format(best_rf.score(X_test, y_test)))
-
 
 clf = SVC(kernel='rbf', probability=True)
 clf = clf.fit(X_train, y_train)
 print('Train score:{:.3f}'.format(clf.score(X_train, y_train)))
 print('Test score:{:.3f}'.format(clf.score(X_test, y_test)))
 
+print()
+
+lf = SVC(C=1.0, cache_size=200, coef0=0.0, degree=3,
+         gamma='auto_deprecated', kernel='rbf', max_iter=-1, shrinking=True,
+         tol=0.001, verbose=False)
+clf = clf.fit(X_train, y_train)
+print('Train score:{:.3f}'.format(clf.score(X_train, y_train)))
+print('Test score:{:.3f}'.format(clf.score(X_test, y_test)))

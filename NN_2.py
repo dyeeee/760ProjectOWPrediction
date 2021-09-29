@@ -16,8 +16,8 @@ from tensorflow.keras.optimizers import SGD, RMSprop, Adam
 seed = 7
 numpy.random.seed(seed)
 
-df = pd.read_table("./P3_Data/OWL_Data_team_match_stat_all_2020_withRank_v2.csv", sep=",")
-test_df = pd.read_table("./P3_Data/TESTSET_V2.csv", sep=",")
+df = pd.read_table("./P3_Data/OWL_Data_team_match_stat_all_2020_withRank_v3.csv", sep=",")
+test_df = pd.read_table("./P3_Data/OWL_Data_TESTSET_V3.csv", sep=",")
 
 # split data & response
 # data = df.iloc[:, 4:]
@@ -25,14 +25,14 @@ test_df = pd.read_table("./P3_Data/TESTSET_V2.csv", sep=",")
 #
 # test_Data = test_df.iloc[:, 5:]
 # test_response = test_df["3"]
-index = [18, 19, 8, 9, 22, 23, 20, 21, 6, 7, 50, 51, 16, 17, 32, 33, 76, 77]
+index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14, 41]
 
 data = df.iloc[:, index]
 response = df["t1_win"]
 
-test_df = test_df.iloc[:, 1:]
+# test_df = test_df.iloc[:, 1:]
 test_Data = test_df.iloc[:, index]
-test_response = test_df["3"]
+test_response = test_df["t1_win"]
 
 X_train, y_train = data, response
 X_test, y_test = test_Data, test_response
@@ -68,6 +68,7 @@ loss_values = history_dict['loss']
 val_loss_values = history_dict['val_loss']
 epochs = range(1, len(loss_values) + 1)
 
+plt.clf()
 plt.plot(epochs, loss_values, 'bo', label='Training loss')
 plt.plot(epochs, val_loss_values, 'b', label='Validation loss')
 plt.title('Training and validation loss')
@@ -88,3 +89,7 @@ plt.ylabel('Acc')
 plt.legend()
 
 plt.show()
+
+print("test set")
+_, scores = model.evaluate(X_test, y_test, batch_size=150, verbose=0)
+print('Test Accuracy: %.2f' % (scores * 100))
