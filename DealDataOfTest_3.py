@@ -20,7 +20,7 @@ result = cur.fetchall()
 
 # 原始数据 转DF格式
 df_result = pd.DataFrame(list(result))
-df_result = df_result[df_result.iloc[:, 6] > 1000]  # 筛选掉娱乐赛
+# df_result = df_result[df_result.iloc[:, 6] > 1000]  # 筛选掉娱乐赛
 print(df_result)
 df_result.iloc[:, [2, 3, 4, 5]] = df_result.iloc[:, [2, 3, 4, 5]] = df_result.iloc[:, [2, 3, 4, 5]].div(
     df_result.iloc[:, 6], axis=0) * 60
