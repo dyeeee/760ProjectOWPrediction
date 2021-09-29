@@ -50,7 +50,16 @@ all_features = [
 #     result2 = 't1_{0},'.format(str.replace(" ", "_"))
 #     print(result2)
 
+# for str in all_features:
+#     result = 't1_{0}/Time_Played*600 as avg10_t1_{0},'.format(str.replace(" ", "_"))
+#     result2 = 't2_{0}/Time_Played*600 as avg10_t2_{0},'.format(str.replace(" ", "_"))
+#     print(result,result2)
+
+
+# for str in all_features:
+#     result = "(avg10_t1_{0} - avg10_t2_{0}) as t1_t2_{0},".format(str.replace(" ", "_"))
+#     print(result)
+
 for str in all_features:
-    result = 't1_{0}/Time_Played*600 as avg10_t1_{0},'.format(str.replace(" ", "_"))
-    result2 = 't2_{0}/Time_Played*600 as avg10_t2_{0},'.format(str.replace(" ", "_"))
-    print(result,result2)
+    result = "avg10_t1_{0},avg10_t2_{0},".format(str.replace(" ", "_"))
+    print(result,end="")
