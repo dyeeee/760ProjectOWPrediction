@@ -47,12 +47,12 @@ for i in range(df_result.shape[0]):
     else:
         # 选取前五场
         q = q.sort_values(by=0, axis=0, ascending=False)
-        p.iloc[i, [2, 3, 4, 5]] = q.iloc[0:5, [2, 3, 4, 5]].mean()
+        p.iloc[i, [2, 3, 4,5]] = q.iloc[0:5, [2, 3, 4, 5]].mean()
 
 pd.set_option('display.max_columns', None)
 # 显示所有行
 pd.set_option('display.max_rows', None)
-print(p.iloc[:, [0, 2, 3, 4, 5, 6]])
+# print(p.iloc[:, [0, 2, 3, 4, 5, 6]])
 # p.to_csv("./Subdata/test.csv")
 
 # 一句话

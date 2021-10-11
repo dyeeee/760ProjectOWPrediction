@@ -7,21 +7,24 @@ import pandas as pd
 
 # 链接数据库
 conn = pymysql.connect(
-    host = "8.129.120.114",
-    port = 3306,
-    user = "root",
-    passwd = "123",
-    db = "OWL_Data"
+    host="8.129.120.114",
+    port=3306,
+    user="root",
+    passwd="123",
+    db="OWL_Data"
 )
 
 # 创建游标
 cur = conn.cursor()
 
-#查询match_result_2020表的所需字段数据
+# 查询match_result_2020表的所需字段数据
 cur.execute("select * from team_match_stat_2020")
 result = cur.fetchall()
-df_result = pd.DataFrame(list(result),columns = ["match_id", "t1_win", "avg_10_t1_Hero_Damage_Done", "avg_10_t1_Final_Blows", "avg_10_t1_Healing_done", "avg_10_t1_Deaths",
-                                                 "avg_10_t2_Hero_Damage_done",  "avg_10_t2_Final_Blows", "avg_10_t2_Healing_done", "avg_10_t2_Deaths"])
+df_result = pd.DataFrame(list(result),
+                         columns=["match_id", "t1_win", "avg_10_t1_Hero_Damage_Done", "avg_10_t1_Final_Blows",
+                                  "avg_10_t1_Healing_done", "avg_10_t1_Deaths",
+                                  "avg_10_t2_Hero_Damage_done", "avg_10_t2_Final_Blows", "avg_10_t2_Healing_done",
+                                  "avg_10_t2_Deaths"])
 
 print(df_result.head())
 df_X = df_result.iloc[:, 2:10]
