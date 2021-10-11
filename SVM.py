@@ -13,8 +13,8 @@ from sklearn.svm import SVC
 seed = 7
 np.random.seed(seed)
 
-df = pd.read_table("./P3_Data/OWL_Data_team_match_stat_all_2020_withRank_v3.csv", sep=",")
-test_df = pd.read_table("./P3_Data/OWL_Data_TESTSET_V3.csv", sep=",")
+df = pd.read_table("P_Data/OWL_Data_team_match_stat_all_2020_withRank_v3.csv", sep=",")
+test_df = pd.read_table("P_Data/OWL_Data_TESTSET_V3.csv", sep=",")
 
 new_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14]
 off_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14, 40]
@@ -22,10 +22,12 @@ pag_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14, 41]
 pr_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14, 42]
 add_index = [11, 6, 13, 12, 5, 27, 10, 18, 16, 30, 20, 15, 29, 36, 14, 41, 42]
 
-data = df.iloc[:, new_index]
+only_index = [42]
+
+data = df.iloc[:, only_index]
 response = df["t1_win"]
 
-test_Data = test_df.iloc[:, new_index]
+test_Data = test_df.iloc[:, only_index]
 test_response = test_df["t1_win"]
 
 X_train, y_train = data, response

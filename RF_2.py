@@ -16,8 +16,8 @@ from sklearn.svm import SVC
 seed = 7
 np.random.seed(seed)
 
-df = pd.read_table("./P3_Data/OWL_Data_team_match_stat_all_2020_withRank_v3.csv", sep=",")
-test_df = pd.read_table("./P3_Data/OWL_Data_TESTSET_V3.csv", sep=",")
+df = pd.read_table("P_Data/OWL_Data_team_match_stat_all_2020_withRank_v3.csv", sep=",")
+test_df = pd.read_table("P_Data/OWL_Data_TESTSET_V3.csv", sep=",")
 
 # split data & response
 # data = df.iloc[:, 4:]
