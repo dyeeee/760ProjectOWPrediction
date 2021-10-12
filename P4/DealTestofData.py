@@ -16,17 +16,17 @@ conn = pymysql.connect(
 cur = conn.cursor()
 
 # 查询match_result_2020表的所需字段数据
-cur.execute("select * from team_match_stat_all_2020to2021")
+cur.execute("select * from team_match_stat_all_2020_withRank")
 result = cur.fetchall()
 
 # 原始数据 转DF格式
 df_result = pd.DataFrame(list(result))
 
+print(df_result)
 
 
 
-
-cnum = 76
+cnum = 82
 # 原始数据大小
 print("Raw data size：", df_result.shape)
 print("Raw data preview \n", df_result.iloc[:, [num for num in range(4, cnum)]])
@@ -40,7 +40,7 @@ p = df_result.copy(deep=True)
 t1_index = [num for num in range(4, cnum, 2)]
 t2_index = [num for num in range(5, cnum, 2)]
 
-n_size = 3
+n_size = 6
 
 for i in range(1, df_result.shape[0]):
     print(i)
@@ -146,7 +146,7 @@ cur.close()
 
 # 找列名
 cur1 = conn.cursor()
-cur1.execute("SELECT COLUMN_NAME  FROM information_schema.columns WHERE table_name='team_match_stat_all_2020to2021'")
+cur1.execute("SELECT COLUMN_NAME  FROM information_schema.columns WHERE table_name='team_match_stat_all_2020_withRank_v2'")
 result1 = cur1.fetchall()
 
 columnName = list(result1)

@@ -1,4 +1,4 @@
-from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
 from sklearn.feature_selection import SelectFromModel
 import pymysql
 import pandas as pd
@@ -38,7 +38,8 @@ y = df_all_stat.apply(function, axis=1)
 # print(X.shape)
 # print(y.shape)
 # print(y)
-clf = ExtraTreesClassifier()
+#clf = ExtraTreesClassifier()
+clf = RandomForestClassifier()
 clf = clf.fit(X, y)
 
 s_importance = pd.Series(list(clf.feature_importances_), index=col_imp)
@@ -48,7 +49,8 @@ print(s_importance)
 model = SelectFromModel(clf, prefit=True, max_features=15)
 X_new = model.transform(X)
 
-clf_new = ExtraTreesClassifier()
+#clf_new = ExtraTreesClassifier()
+clf_new = RandomForestClassifier();
 clf_new = clf_new.fit(X_new, y)
 # y_predict = clf_new.predict(X_new)
 result = clf_new.score(X_new, y)
