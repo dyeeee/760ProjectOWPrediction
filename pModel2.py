@@ -17,7 +17,6 @@ from sklearn.model_selection import GridSearchCV
 train_df = pd.read_table("P_Data/OWL_Data_team_match_stat_all_2020_withRank_v2.csv", sep=",")
 test_df = pd.read_table("P_Data/TESTSET_V2.csv", sep=",")
 
-
 # split data & response
 response = train_df["t1_win"]
 
@@ -25,8 +24,12 @@ test_Data = test_df.iloc[:, 1:]
 test_response = test_df.iloc[:, 4]
 
 # 特征选择过的
-X_train, y_train = train_df.iloc[:, [18,19,8,9,22,23,20,21,6,7,50,51,16,17,32,33,28,29,56,57,36,37,42,43,26,27,54,55,68,69,24,25,80, 81]], response
-X_test, y_test = test_Data.iloc[:, [18,19,8,9,22,23,20,21,6,7,50,51,16,17,32,33,28,29,56,57,36,37,42,43,26,27,54,55,68,69,24,25,80, 81]], test_response
+X_train, y_train = train_df.iloc[:,
+                   [18, 19, 8, 9, 22, 23, 20, 21, 6, 7, 50, 51, 16, 17, 32, 33, 28, 29, 56, 57, 36, 37, 42, 43, 26, 27,
+                    54, 55, 68, 69, 24, 25, 76, 77]], response
+X_test, y_test = test_Data.iloc[:,
+                 [18, 19, 8, 9, 22, 23, 20, 21, 6, 7, 50, 51, 16, 17, 32, 33, 28, 29, 56, 57, 36, 37, 42, 43, 26, 27,
+                  54, 55, 68, 69, 24, 25, 76, 77]], test_response
 
 # 没有特征选择过
 # X_train, y_train = train_df.iloc[:, 4:78], response
@@ -41,7 +44,7 @@ random_state = 999
 #
 #
 # #
-#调参，绘制学习曲线来调参n_estimators（对随机森林影响最大）
+# 调参，绘制学习曲线来调参n_estimators（对随机森林影响最大）
 # score_lt = []
 #
 # # 每隔10步建立一个随机森林，获得不同n_estimators的得分
@@ -80,7 +83,6 @@ random_state = 999
 # plt.show()
 
 
-
 # score_lt = []
 # for i in range(1, 20):
 #     rfc = RandomForestClassifier(n_estimators=50
@@ -114,8 +116,8 @@ random_state = 999
 
 
 # 完整的rf  只有2020       0.68        71 7
-team_2020_rf = RandomForestClassifier(random_state=random_state, n_estimators=31, max_depth=2, bootstrap=True)
-score = cross_val_score(team_2020_rf, X_test, y_test, cv=10)
+team_2020_rf = RandomForestClassifier(random_state=random_state, n_estimators=57, max_depth=7, bootstrap=True)
+score = cross_val_score(team_2020_rf, X_test, y_test)
 score2 = cross_val_score(team_2020_rf, X_train, y_train, cv=10)
 print("测试精度: ", score.mean())
 print("训练精度: ", score2.mean())
@@ -123,6 +125,9 @@ d = np.std(score)
 
 print("标准差: ", d)
 
+team_2020_rf.fit(X_train, y_train)
+score = team_2020_rf.score(X_test,y_test)
+print("测试: ", score)
 # 2021年      效果不咋滴  0.63
 # team_2020_rf = RandomForestClassifier(random_state=random_state, n_estimators=22, max_depth=2, bootstrap=True)
 # score = cross_val_score(team_2020_rf, X_test, y_test, cv=10)
