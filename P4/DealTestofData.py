@@ -40,7 +40,7 @@ p = df_result.copy(deep=True)
 t1_index = [num for num in range(4, cnum, 2)]
 t2_index = [num for num in range(5, cnum, 2)]
 
-n_size = 6
+n_size = 7
 
 for i in range(1, df_result.shape[0]):
     print(i)
