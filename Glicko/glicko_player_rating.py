@@ -168,14 +168,14 @@ if __name__ == '__main__':
         db="OWL_Data"
     )
     cur = conn.cursor()
-    cur.execute("select match_id, match_winner, match_loser from match_result_2020")
+    cur.execute("select match_id, match_winner, match_loser from match_result_2020to2021")
     df_match_result = cur.fetchall()
 
     df_result = pd.DataFrame(list(df_match_result), columns=["match_id", "match_winner", "match_loser"])
 
     cur.execute("select esports_match_id, player_name, team_name, `Time Played`, Assists, `Average Time Alive`\
                 , Deaths, `Final Blows`, `Environmental Kills`, `Melee Percentage of Final Blows`, `Healing Done`\
-                from all_heroes_stat_all_2020_Player")
+                from all_heroes_stat_all_2020to2021_Player")
     hero = cur.fetchall()
     df_hero = pd.DataFrame(list(hero), columns=["match_id", "player_name", "team_name", "time_played", "Assists"
                                                 , "Average Time Alive", "Deaths", "Final Blows", "Environmental Kills"
