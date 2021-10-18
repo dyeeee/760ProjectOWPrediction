@@ -17,7 +17,6 @@ from sklearn.model_selection import GridSearchCV
 train_df = pd.read_table("P_Data/OWL_Data_team_match_stat_all_2020_withRank_v2.csv", sep=",")
 test_df = pd.read_table("P_Data/TESTSET_P4_n7.csv", sep=",")
 
-
 # split data & response
 response = train_df["t1_win"]
 
@@ -34,7 +33,7 @@ test_response = test_df.iloc[:, 4]
 # 官方 78,79
 # pagerank 76 77               选手排名 80 81
 
-list1 = [76,77,80,81]
+list1 = [76, 77, 80, 81]
 
 # X_train, y_train = train_df.iloc[:, list1], response
 # X_test, y_test = test_Data.iloc[:, list1], test_response
@@ -44,8 +43,8 @@ list1 = [76,77,80,81]
 # X_test, y_test = train_df.iloc[180:296, list1], response.iloc[180:296]
 
 # 尝试2
-X_train, X_test, y_train,  y_test = train_test_split(train_df.iloc[96:, list1], response.iloc[96:], test_size=0.3, random_state=321)
-
+X_train, X_test, y_train, y_test = train_test_split(train_df.iloc[96:, list1], response.iloc[96:], test_size=0.3,
+                                                    random_state=321)
 
 # # random_state
 random_state = 9999
@@ -53,7 +52,6 @@ random_state = 9999
 # # 随机森林主要的参数有n_estimators（子树的数量）、max_depth（树的最大生长深度）、min_samples_leaf（叶子的最小样本数量）
 # # min_samples_split(分支节点的最小样本数量）、max_features（最大选择特征数）
 #
-
 
 
 # 调参数       2020是 50,150      5,8
@@ -64,10 +62,8 @@ rfc = RandomForestClassifier(random_state=random_state)
 grid_search = GridSearchCV(rfc, param_grid, cv=3)
 grid_search.fit(X_train, y_train)
 
-
 print(grid_search.best_params_)
 print(grid_search.best_score_)
-
 
 # 预测      试一下page 57 7
 # team_2020_rf = RandomForestClassifier(random_state=random_state, n_estimators=79, max_depth=2, bootstrap=True)

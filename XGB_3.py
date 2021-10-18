@@ -12,7 +12,7 @@ from sklearn.model_selection import GridSearchCV
 
 # 2020
 train_df = pd.read_table("P_Data/OWL_Data_team_match_stat_all_2020_withRank_v2.csv", sep=",")
-test_df = pd.read_table("P_Data/TESTSET_P4_n6.csv", sep=",")
+test_df = pd.read_table("P_Data/TESTSET_P4_n7.csv", sep=",")
 
 # split data & response
 response = train_df["t1_win"]
@@ -25,20 +25,22 @@ test_response = test_df.iloc[:, 4]
 # 78,79 off
 # 80,81 player
 
-X_train, y_train = train_df.iloc[:,
-                   [18, 19, 8, 9, 22, 23, 20, 21, 6, 7, 50, 51, 16, 17, 32, 33, 28, 29, 56, 57, 36, 37, 42, 43, 26, 27,
-                    54, 55, 68, 69, 24, 25, 76, 77]], response
-X_test, y_test = test_Data.iloc[:,
-                 [18, 19, 8, 9, 22, 23, 20, 21, 6, 7, 50, 51, 16, 17, 32, 33, 28, 29, 56, 57, 36, 37, 42, 43, 26, 27,
-                  54, 55, 68, 69, 24, 25,76, 77]], test_response
+# X_train, y_train = train_df.iloc[:,
+#                    [18, 19, 8, 9, 22, 23, 20, 21, 6, 7, 50, 51, 16, 17, 32, 33, 28, 29, 56, 57, 36, 37, 42, 43, 26, 27,
+#                     54, 55, 68, 69, 24, 25, 76, 77]], response
+# X_test, y_test = test_Data.iloc[:,
+#                  [18, 19, 8, 9, 22, 23, 20, 21, 6, 7, 50, 51, 16, 17, 32, 33, 28, 29, 56, 57, 36, 37, 42, 43, 26, 27,
+#                   54, 55, 68, 69, 24, 25, 76, 77]], test_response
 
-# list_index = [i for i in range(4, 76)]
-# list_index.append(76)
-# list_index.append(77)
-# list_index.append(80)
-# list_index.append(81)
-# X_train, y_train = train_df.iloc[:, list_index], response
-# X_test, y_test = test_Data.iloc[:, list_index], test_response
+list_index = [i for i in range(4, 76)]
+list_index.append(76)
+list_index.append(77)
+# list_index.append(78)
+# list_index.append(79)
+list_index.append(80)
+list_index.append(81)
+X_train, y_train = train_df.iloc[:, list_index], response
+X_test, y_test = test_Data.iloc[:, list_index], test_response
 
 print("running")
 # 调参
@@ -56,7 +58,7 @@ print("running")
 
 #
 # 预测
-team_2020_clf = XGBClassifier(random_state=999, n_estimators=40, max_depth=6, learning_rate=0.5)
+team_2020_clf = XGBClassifier(random_state=999, n_estimators=100, max_depth=1, learning_rate=0.7)
 score2 = cross_val_score(team_2020_clf, X_train, y_train, cv=10)
 print("训练精度: ", score2.mean())
 d = np.std(score2)
