@@ -57,34 +57,34 @@ random_state = 9999
 
 
 # 调参数       2020是 50,150      5,8
-param_grid = [{'bootstrap': [True], 'n_estimators': range(1, 150), 'max_depth': range(1, 8)},
-              ]
-rfc = RandomForestClassifier(random_state=random_state)
-
-grid_search = GridSearchCV(rfc, param_grid, cv=3)
-grid_search.fit(X_train, y_train)
-
-
-print(grid_search.best_params_)
-print(grid_search.best_score_)
+# param_grid = [{'bootstrap': [True], 'n_estimators': range(1, 150), 'max_depth': range(1, 8)},
+#               ]
+# rfc = RandomForestClassifier(random_state=random_state)
+#
+# grid_search = GridSearchCV(rfc, param_grid, cv=3)
+# grid_search.fit(X_train, y_train)
+#
+#
+# print(grid_search.best_params_)
+# print(grid_search.best_score_)
 
 
 # 预测      试一下page 57 7
-# team_2020_rf = RandomForestClassifier(random_state=random_state, n_estimators=79, max_depth=2, bootstrap=True)
-#
-# score2 = cross_val_score(team_2020_rf, X_train, y_train, cv=10)
-#
-# print(score2)
-# print("训练精度: ", score2.mean())
-#
-# d = np.std(score2)
-# print("标准差: ", d)
-#
-#
-# score = team_2020_rf.fit(X_train, y_train).score(X_test, y_test)
-# print("测试精度: ", score)
+team_2020_rf = RandomForestClassifier(random_state=random_state, n_estimators=6, max_depth=1, bootstrap=True)
 
-# model = team_2020_rf.fit(X_train, y_train)
-#
-# score3 = cross_val_score(model, X_test, y_test, cv=10)
-# print(score3.mean())
+score2 = cross_val_score(team_2020_rf, X_train, y_train, cv=10)
+
+print(score2)
+print("训练精度: ", score2.mean())
+
+d = np.std(score2)
+print("标准差: ", d)
+
+
+score = team_2020_rf.fit(X_train, y_train).score(X_test, y_test)
+print("测试精度: ", score)
+
+model = team_2020_rf.fit(X_train, y_train)
+
+score3 = cross_val_score(model, X_test, y_test, cv=10)
+print(score3.mean())
