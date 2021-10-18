@@ -20,11 +20,11 @@ conn = pymysql.connect(
 cur = conn.cursor()
 
 # 查询
-cur.execute("SELECT * from match_result_2020 order by match_id")
+cur.execute("SELECT * from match_result_2020to2021 order by match_id")
 result = cur.fetchall()
 df_matchresult = pd.DataFrame(list(result), columns=["match_id", "match_winner", "match_loser"])
 
-cur.execute("select distinct match_winner from match_result_2020 order by match_winner")
+cur.execute("select distinct match_winner from match_result_2020to2021 order by match_winner")
 result = cur.fetchall()
 df_teamname = pd.DataFrame(list(result), columns=["team_name"])
 team_list = ["id"]
@@ -39,7 +39,7 @@ for index, row in df_teamname.iterrows():
 #     player_name_list.append(row['player_name'])
 
 
-cur.execute("SELECT * from playerrank_match_2020_v2 order by match_id")
+cur.execute("SELECT * from player_rank_2020to2021 order by match_id")
 des = cur.description
 col = []
 for i in range(len(des)):
@@ -47,7 +47,7 @@ for i in range(len(des)):
 result = cur.fetchall()
 df_playerrank = pd.DataFrame(list(result), columns=col)
 
-cur.execute("SELECT distinct esports_match_id,team_name,player_name from all_heroes_stat_all_2020_Player")
+cur.execute("SELECT distinct esports_match_id,team_name,player_name from all_heroes_stat_all_2020to2021_Player")
 result = cur.fetchall()
 df_match_players = pd.DataFrame(list(result), columns=["match_id", "team_name", "player_name"])
 

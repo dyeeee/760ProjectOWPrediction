@@ -21,7 +21,7 @@ conn = pymysql.connect(
 cur = conn.cursor()
 
 # 查询
-cur.execute("select distinct match_winner from match_result_2020 order by match_winner")
+cur.execute("select distinct match_winner from match_result_2020to2021 order by match_winner")
 result = cur.fetchall()
 df_teamname = pd.DataFrame(list(result), columns=["team_name"])
 # 原始数据大小
@@ -39,7 +39,8 @@ for index, row in df_teamname.iterrows():
 
 cur = conn.cursor()
 # 查询
-cur.execute("select match_id, match_winner,match_loser from match_result_2020 order by match_id")
+cur.execute("select match_id, match_winner,match_loser "
+            "from match_result_2020to2021 where match_id > 37000 order by match_id")
 result = cur.fetchall()
 
 # 原始数据 转DF格式
@@ -56,7 +57,8 @@ for index, row in df_match.iterrows():
 cur = conn.cursor()
 # 查询
 cur.execute(
-    "select match_id, map_name,map_winner,map_loser,match_winner,match_loser from match_map_result_2020 order by match_id")
+    "select match_id, map_name,map_winner,map_loser,match_winner,match_loser "
+    "from match_map_result_2020to2021 where match_id > 37000  order by match_id")
 result = cur.fetchall()
 
 # 原始数据 转DF格式
@@ -70,9 +72,11 @@ for index, row in df_match.iterrows():
 
     if tmpid != 0:
         if tmpid != id:
+            print(tmpid)
             map_WL_list[team_list.index(lastMwin)][0] += 1
             map_WL_Result_list.append([tmpid, copy.deepcopy(map_WL_list)])
     tmpid = id
+
 
     win = row["map_winner"]
     lose = row["map_loser"]

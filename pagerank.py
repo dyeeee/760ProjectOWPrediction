@@ -85,14 +85,14 @@ def PageRank(M, N, T=300, eps=1e-6, beta=0.8):
 #
 # print(pageRankResult)
 
-df_result_final = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"]).iloc[0:465,:]
+df_result_final = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"]).iloc[0:466,:]
 df_result_final["pagerank_winner"] = 0
 df_result_final["pagerank_loser"] = 0
 print(df_result_final[-1:])
 
 team_name = ['Atlanta Reign', 'Boston Uprising', 'Chengdu Hunters', 'Dallas Fuel', 'Florida Mayhem', 'Guangzhou Charge', 'Hangzhou Spark', 'Houston Outlaws', 'London Spitfire', 'Los Angeles Gladiators', 'Los Angeles Valiant', 'New York Excelsior', 'Paris Eternal', 'Philadelphia Fusion', 'San Francisco Shock', 'Seoul Dynasty', 'Shanghai Dragons', 'Toronto Defiant', 'Vancouver Titans', 'Washington Justice']
 
-df_final_result_allTeam = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"]).iloc[0:465,:]
+df_final_result_allTeam = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"]).iloc[0:466,:]
 col_name = df_final_result_allTeam.columns.tolist()
 print(col_name)
 col_name = col_name + team_name
@@ -101,7 +101,7 @@ df_final_result_allTeam = df_final_result_allTeam.reindex(columns = col_name)
 print(df_final_result_allTeam)
 
 
-for i in range(1,465):
+for i in range(1,466):
     df_result = pd.DataFrame(list(result),columns = ["match_id", "match_winner", "match_loser"]).iloc[0:i,:]
     # df_result化为邻接矩阵
 
